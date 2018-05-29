@@ -8,11 +8,46 @@ class Movement:
         self.__direction = direction
         self.__AI_direction = None
 
+    '''
+    Slight-Right-Turn       1
+    Sharp-Right-Turn        2
+    Move-Forward            3
+    Slight-Left-Turn        4
+    '''
+
     def getSenseInfo(self):
         return self.__senseInfo
 
     def getDirection(self):
-        return self.__direction
+        if self.__direction == "Slight-Right-Turn":
+            return 1
+        elif self.__direction == "Sharp-Right-Turn":
+            return 2
+        elif self.__direction == "Move-Forward":
+            return 3
+        else:
+            return 4
+
+    def setDirection(self, direction):
+        if direction == 1:
+            self.__direction = "Slight-Right-Turn"
+        elif direction == 2:
+            self.__direction = "Sharp-Right-Turn"
+        elif direction == 3:
+            self.__direction = "Move-Forward"
+        else:
+            self.__direction = "Slight-Left-Turn"
 
     def getAI_direction(self):
         return self.__AI_direction
+
+    def setAI_direction(self, direction):
+        print(direction)
+        if direction == 1:
+            self.__direction = "Slight-Right-Turn"
+        elif direction == 2:
+            self.__direction = "Sharp-Right-Turn"
+        elif direction == 3:
+            self.__direction = "Move-Forward"
+        else:
+            self.__direction = "Slight-Left-Turn"
