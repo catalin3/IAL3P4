@@ -34,8 +34,12 @@ class Controller:
         coefficints = firstStepGradient.train(numberOfIterations, learningRate)
         print("train0")
         for movement in data:
-            curentValue = firstStepGradient.sigmoidFunction(firstStepGradient.prediction(coefficints, movement))
-            if curentValue == 0:
+            if firstStepGradient.sigmoidFunction(firstStepGradient.prediction(coefficints, movement)) < 0.5:
+                currentValue = 0
+            else:
+                currentValue = 1
+            #print(currentValue)
+            if currentValue == 0:
                 movement.setAI_direction(1)
             else:
                 nextStepList.append(movement)
@@ -45,11 +49,25 @@ class Controller:
         coefficints = nextStepGradient.train(numberOfIterations, learningRate)
         print("train1")
         for movement in nextStepList:
-            currentValue = nextStepGradient.sigmoidFunction(nextStepGradient.prediction(coefficints, movement))
-            movement.setAI_direction(int(curentValue))
+            if nextStepGradient.sigmoidFunction(nextStepGradient.prediction(coefficints, movement)) < 0.5:
+                currentValue = 0
+            else:
+                currentValue = 1
+            #print(currentValue)
+            movement.setAI_direction(int(currentValue))
 
         for movement in data:
             print(movement.getAI_direction())
+
+    def prediction(self, coeficients, data):
+        value = 0
+        for i in range(len(data.getSenseInfo())):
+            snsInf = data.getSenseInfo()
+            value += float(coeficients[i]) * float(snsInf[i])
+        return value
+
+    def sigmoidFunction(self, value):
+        return 1.0//(1.0 + math.exp(-value))
 
     def evolutive(self, path, numberOfIterations, populationSize):
         data = self.loadData(path)
@@ -60,34 +78,16 @@ class Controller:
         nextSteps = []
         coefficients = firstStepEvolutiveAlgorithm.solve()
 
-"""
- private void evolutiveAlgorithmSolve(int numberOfIterations, int populationSize) {
+        for movement in data:
+            currentValue = self.sigmoidFunction(self.prediction(coefficients,movement))
+            if currentValue == 0:
+                movement.setAI_direction(1)
+            else:
+                nextSteps.append(movement)
 
-        Controller.CURRENT_STEP = 0;
-
-        EvolutiveAlgorithm firstStepEvolutiveAlgorithm = new EvolutiveAlgorithm(repository.getData(), numberOfIterations, populationSize);
-
-        ArrayList<Measurement> nextSteplist = new ArrayList<>();
-
-        double[] coefficients = firstStepEvolutiveAlgorithm.solve();
-
-        for(Measurement measurement : repository.getData()) {
-            int currentValue = Controller.sigmoidFunction(Controller.prediction(coefficients, measurement)) <= 0.5 ? 0 : 1;
-            if(currentValue == 0) {
-                measurement.setAI_outputData(1);
-            }
-            else {
-                nextSteplist.add(measurement);
-            }
-        }
-
-        Controller.CURRENT_STEP = 1;
-
-        EvolutiveAlgorithm nextStepEvolutiveAlgorithm = new EvolutiveAlgorithm(repository.getData(), numberOfIterations, populationSize);
-        coefficients = nextStepEvolutiveAlgorithm.solve();
-        for(Measurement measurement : nextSteplist) {
-            int currentValue = Controller.sigmoidFunction(Controller.prediction(coefficients, measurement)) <= 0.5 ? 0 : 1;
-            measurement.setAI_outputData(currentValue + 2);
-        }
-    }
-"""
+        ev_current_step = 1
+        self.current_step = 1
+        nextStepEvoluvieAlgorithm = EvolutiveAlgorithm(data,numberOfIterations,populationSize)
+        coefficients = nextStepEvoluvieAlgorithm.solve()
+        for movement in nextSteps:
+            movement.setAI_direction(currentValue)

@@ -39,10 +39,16 @@ class Movement:
             self.__direction = "Slight-Left-Turn"
 
     def getAI_direction(self):
-        return self.__AI_direction
+        if self.__AI_direction == 1:
+            return "Slight-Right-Turn"
+        elif self.__AI_direction == 2:
+            return "Sharp-Right-Turn"
+        elif self.__AI_direction == 3:
+            return "Move-Forward"
+        else:
+            return "Slight-Left-Turn"
 
     def setAI_direction(self, direction):
-        print(direction)
         if direction == 1:
             self.__direction = "Slight-Right-Turn"
         elif direction == 2:

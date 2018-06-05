@@ -8,20 +8,21 @@ class Gradient:
         self.__data = data
 
     def updateCoefficient(self, coefficients, learningRate):
+        print("updateCoefficient")
         predictedValues = [0 for x in range(len(self.__data))]
         realValues = [0 for x in range(len(self.__data))]
         for i in range(len(self.__data)):
             movement = self.__data[i]
             predictedValues[i] = self.sigmoidFunction(self.prediction(coefficients, movement))
             realValues[i] = movement.getDirection()
-        print("\taici")
+        print("\t.")
         for i in range(len(self.__data)):
             gradient = 0
             for j in range(len(self.__data)):
                 movement = self.__data[j]
                 gradient += movement.getDirection() * (predictedValues[j] - realValues[j])
             coefficients[i] -= gradient * learningRate
-        print("\taici2")
+        print("\t..")
         return coefficients
 
     def train(self, numberOfIterations, learningRate):
@@ -43,4 +44,5 @@ class Gradient:
         return value
 
     def sigmoidFunction(self, value):
+        #print(value)
         return 1.0//(1.0 + math.exp(-value))
